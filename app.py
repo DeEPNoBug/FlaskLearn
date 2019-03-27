@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from flask import Flask
+from flask import Flask, url_for
 
 app = Flask(__name__)
 
@@ -27,12 +27,14 @@ def index():
 @app.route('/hi')
 @app.route('/hello')
 def say_hello():
-    return "<h1> Say, Hello! %s</h1>" % value
+    # return "<h1> Say, Hello! %s</h1>" % value
+    return url_for('index')  # 通过传入的 endpoint 获取到对应的 url
 
 
 @app.route('/greet/<name>')
 def greet(name):
-    return "<h1> Hello, %s </h1>" % name
+    # return "<h1> Hello, %s </h1>" % name
+    return url_for("say_hello", name=name)  # 返回带查询参数的 url，两种方式返回的都是相对的 url ，将 _external=True 就会返回完整的 url
 
 
 """
