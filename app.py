@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-
+import click
 from flask import Flask, url_for
 
 app = Flask(__name__)
@@ -36,6 +35,18 @@ def greet(name):
     # return "<h1> Hello, %s </h1>" % name
     return url_for("say_hello", name=name)  # 返回带查询参数的 url，两种方式返回的都是相对的 url ，将 _external=True 就会返回完整的 url
 
+
+# 创建 Flask 命令
+@app.cli.command()
+def hello():
+    click.echo("Hello, World!")
+
+
+@app.cli.command('say-hello')
+def say_hello2():
+    click.echo("Hello, Human!")
+
+# 更多 自定义命令设置 参考 click 的官方文档 https://click.palletsprojects.com/en/7.x/
 
 """
 使用 export 文件名 来指定运行的文件
