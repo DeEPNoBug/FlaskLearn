@@ -12,5 +12,11 @@ def index():
     return "<h1> Hello, world! </h1>"
 
 
+@app.route('/hi')
+@app.route('/hello')
+def say_hello():
+    return "<h1> Say, Hello! </h1>"
+
+
 if __name__ == '__main__':
     app.run(debug=True)
