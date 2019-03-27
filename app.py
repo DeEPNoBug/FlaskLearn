@@ -18,5 +18,10 @@ def say_hello():
     return "<h1> Say, Hello! </h1>"
 
 
+@app.route('/greet/<name>')
+def greet(name):
+    return "<h1> Hello, %s </h1>" % name
+
+
 if __name__ == '__main__':
     app.run(debug=True)
