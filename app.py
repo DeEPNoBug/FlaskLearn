@@ -37,6 +37,8 @@ pipenv install python-dotenv
 可以使用 内网穿透/端口转发 工具 来让外部访问
 https://ngrok.com/
 https://localtunnel.github.io/www/
+
+在这一步,安装了 watchdog 来监控文件的变化，自动重载
 """
 
 if __name__ == '__main__':
