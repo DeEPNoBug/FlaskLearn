@@ -6,6 +6,18 @@ from flask import Flask
 
 app = Flask(__name__)
 
+# 使用 config 配置, 配置名必须是大写，小写的不会被读取
+app.config["ADMIN_NAME"] = "Admin"  # 配置一条
+
+# 配置多条
+app.config.update(
+    TESTING=True,
+    SECRET_KEY="+dgNmjumLsAOuPkEMs8LWVxH85d1B9dCvAiMdzF3/2k="
+)
+
+# 从配置文件中读取数据
+value = app.config["SECRET_KEY"]
+
 
 @app.route('/')
 def index():
@@ -15,7 +27,7 @@ def index():
 @app.route('/hi')
 @app.route('/hello')
 def say_hello():
-    return "<h1> Say, Hello! </h1>"
+    return "<h1> Say, Hello! %s</h1>" % value
 
 
 @app.route('/greet/<name>')
