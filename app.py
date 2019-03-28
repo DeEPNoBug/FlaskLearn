@@ -64,6 +64,16 @@ https://ngrok.com/
 https://localtunnel.github.io/www/
 
 在这一步,安装了 watchdog 来监控文件的变化，自动重载
+
+# flask request 处理url中的内容
+https://www.baidu.com/hello?name=gary
+path        /hello
+full_path   /hello?name=gary
+host        www.baidu.com
+host_url    http://www.baidu.com/
+base_url    https://www.baidu.com/hello
+url         https://www.baidu.com/hello?name=gary
+url_root    https://www.baidu.com/
 """
 
 if __name__ == '__main__':
