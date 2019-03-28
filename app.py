@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import click
-from flask import Flask, url_for
+from flask import Flask, url_for, redirect, session, request
 
 app = Flask(__name__)
 
@@ -34,7 +34,18 @@ def index():
 @app.route('/hello')
 def say_hello():
     # return "<h1> Say, Hello! %s</h1>" % value
-    return url_for('index')  # 通过传入的 endpoint 获取到对应的 url
+    # return url_for('index')  # 通过传入的 endpoint 获取到对应的 url
+
+    # 修改say_hello 来实现对session 认证的简单使用
+    name = request.cookies.get('name', 'Human')
+    response = "<h1> Hello, %s </h1>" % name
+
+    if 'logged_in' in session:
+        response += '[Authenticated]'
+    else:
+        response += '[Not Authenticated]'
+
+    return response
 
 
 @app.route('/greet/<name>')
@@ -52,6 +63,7 @@ def hello():
 @app.cli.command('say-hello')
 def say_hello2():
     click.echo("Hello, Human!")
+
 
 # 更多 自定义命令设置 参考 click 的官方文档 https://click.palletsprojects.com/en/7.x/
 
@@ -81,6 +93,17 @@ host_url    http://www.baidu.com/
 base_url    https://www.baidu.com/hello
 url         https://www.baidu.com/hello?name=gary
 url_root    https://www.baidu.com/
+"""
+
+
+# 模拟用户登陆认证
+@app.route('/login')
+def login():
+    session["logged_in"] = True  # 写入session
+    return redirect(url_for('say_hello'))
+"""
+session对象可以像字典一样操作，
+我们向session中添加了一个 {"logged_in": True}
 """
 
 if __name__ == '__main__':
