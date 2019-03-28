@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import os
 import click
 from flask import Flask, url_for
 
@@ -9,10 +10,16 @@ app = Flask(__name__)
 app.config["ADMIN_NAME"] = "Admin"  # 配置一条
 
 # 配置多条
-app.config.update(
-    TESTING=True,
-    SECRET_KEY="+dgNmjumLsAOuPkEMs8LWVxH85d1B9dCvAiMdzF3/2k="
-)
+# app.config.update(
+#     TESTING=True,
+#     SECRET_KEY="+dgNmjumLsAOuPkEMs8LWVxH85d1B9dCvAiMdzF3/2k="
+# )
+
+# 设置 secret_key 的方式1
+# app.secret_key = "+dgNmjumLsAOuPkEMs8LWVxH85d1B9dCvAiMdzF3/2k"
+
+# 方式 二
+app.secret_key = os.getenv("SECRET_KEY", "default_secret_key")
 
 # 从配置文件中读取数据
 value = app.config["SECRET_KEY"]
