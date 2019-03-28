@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import click
-from flask import Flask, url_for, redirect, session, request
+from flask import Flask, url_for, redirect, session, request, abort
 
 app = Flask(__name__)
 
@@ -101,10 +101,29 @@ url_root    https://www.baidu.com/
 def login():
     session["logged_in"] = True  # 写入session
     return redirect(url_for('say_hello'))
+
+
 """
 session对象可以像字典一样操作，
 我们向session中添加了一个 {"logged_in": True}
 """
+
+
+@app.route('/admin')
+def admin():
+    if 'logged_in' not in session:
+        abort(403)
+
+    return "欢迎登录超级管理员页面"
+
+
+@app.route('/logout')
+def logout():
+    if 'logged_in' in session:
+        session.pop("logged_in")
+
+    return redirect(url_for('say_hello'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)  # 这种方式已经不被推荐
