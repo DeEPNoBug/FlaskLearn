@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import os
+from urllib.parse import urljoin, urlparse
+
 import click
 from flask import Flask, url_for, redirect, session, request, abort
 
@@ -135,9 +137,17 @@ def bar():
     return "<h1>Bar page</h1><a href='%s'>Do Something</a>" % url_for('do_someting')
 
 
-def redirect_back(default='hello', **kwargs):  # 定义的重定向回上一个页面的工具方法
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+
+
+def redirect_back(default='say_hello', **kwargs):  # 定义的重定向回上一个页面的工具方法
     for target in request.args.get('next'), request.referrer:
-        if target:
+        if not target:
+            continue
+        if is_safe_url(target):
             return redirect(target)
 
     return redirect(url_for(default, **kwargs))
