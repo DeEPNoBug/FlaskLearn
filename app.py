@@ -139,7 +139,9 @@ def bar():
 def do_someting():
     # 这里实现重定向回上一层的逻辑
     # return "<h1>Do something page</h1>"
-    return redirect(request.referrer or url_for('say_hello'))
+    # return redirect(request.referrer or url_for('say_hello'))  # 通过referer的方式
+    return redirect(request.args.get('next', url_for('say_hello')))
+
 
 
 if __name__ == '__main__':
