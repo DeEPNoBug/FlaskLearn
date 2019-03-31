@@ -125,5 +125,22 @@ def logout():
     return redirect(url_for('say_hello'))
 
 
+@app.route('/foo')
+def foo():
+    return "<h1>Foo page</h1><a href='%s'>Do Something</a>" % url_for('do_someting')
+
+
+@app.route('/bar')
+def bar():
+    return "<h1>Bar page</h1><a href='%s'>Do Something</a>" % url_for('do_someting')
+
+
+@app.route('/do_someting')
+def do_someting():
+    # 这里实现重定向回上一层的逻辑
+    # return "<h1>Do something page</h1>"
+    return redirect(request.referrer or url_for('say_hello'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)  # 这种方式已经不被推荐
