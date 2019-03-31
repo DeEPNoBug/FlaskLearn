@@ -138,8 +138,8 @@ def bar():
 
 
 def is_safe_url(target):
-    ref_url = urlparse(request.host_url)
-    test_url = urlparse(urljoin(request.host_url, target))
+    ref_url = urlparse(request.host_url)  # 通过 request.host_url 获取程序主机的 url
+    test_url = urlparse(urljoin(request.host_url, target))  # 通过 urljoin 将目标 url 转换成绝对 url，通过urlparse 进行验证
     return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
 
@@ -160,6 +160,67 @@ def do_someting():
     # return redirect(request.referrer or url_for('say_hello'))  # 通过referer的方式
     # return redirect(request.args.get('next', url_for('say_hello')))
     return redirect_back()
+
+
+"""
+返回局部数据的方式 ajax
+
+1. 纯文本或 html 页面
+
+@app.route('/comments/<int:post_id>')
+def comments(post_id):
+    ...
+    return render_template('comments.html')
+    
+2. json 数据  json数据可以直接在 JavaScript中 操作
+
+@app.route('/profile/<int:user_id>')
+def get_profile(user_id):
+    ...
+    return jsonify(username=username, bio=bio)
+    
+3. 空值 
+
+@app.route('/post/delete/<int:post_id>', methods=['DELETE'])
+def delete_post(post_id):
+    ...
+    return '', 204
+
+4. 异步加载长文章
+文章正文下方有个加载更多的按钮，点击加载更多，获取更多文章加载到已显示的文章下方
+"""
+
+from jinja2.utils import generate_lorem_ipsum
+
+
+@app.route('/post')
+def show_post():
+    post_body = generate_lorem_ipsum(n=2)
+
+    return """
+    <h1>A very long post</h1>
+    <div class='body'>%s</div>
+    <button id="load">Load More</button>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type='text/javascript'>
+    $( function (){
+        $('#load').click( function (){
+            $.ajax({
+                url: '/more',  // 目标url
+                type: 'get',  // 请求的方式
+                success: function(data){  // 返回 2xx 响应后回调的函数
+                    $('.body').append(data);  // 加返回的响应插入到页面中
+                }
+            })
+        })
+    })
+    </script>
+    """ % post_body
+
+
+@app.route('/more')
+def more():
+    return generate_lorem_ipsum(n=1)
 
 
 if __name__ == '__main__':
