@@ -135,13 +135,21 @@ def bar():
     return "<h1>Bar page</h1><a href='%s'>Do Something</a>" % url_for('do_someting')
 
 
+def redirect_back(default='hello', **kwargs):  # 定义的重定向回上一个页面的工具方法
+    for target in request.args.get('next'), request.referrer:
+        if target:
+            return redirect(target)
+
+    return redirect(url_for(default, **kwargs))
+
+
 @app.route('/do_someting')
 def do_someting():
     # 这里实现重定向回上一层的逻辑
     # return "<h1>Do something page</h1>"
     # return redirect(request.referrer or url_for('say_hello'))  # 通过referer的方式
-    return redirect(request.args.get('next', url_for('say_hello')))
-
+    # return redirect(request.args.get('next', url_for('say_hello')))
+    return redirect_back()
 
 
 if __name__ == '__main__':
